@@ -2,38 +2,117 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>夢幻動漫圖鑑 — 登陸頁面範例</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>目前人氣漫畫 Top 10</title>
   <style>
-    :root{
-      --bg:#0f1020;
-      --card:#0f1724aa;
-      --glass: rgba(255,255,255,0.06);
-      --accent:#8b5cf6; /* 紫 */
-      --accent-2:#06b6d4; /* 青 */
-      --muted:#bfc8d6;
-    }
+    :root{--bg:#0f1724;--card:#061219;--accent:#ff7a59;--muted:#9aa7b8}
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family: 'Noto Sans TC', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto;background: radial-gradient(1200px 600px at 10% 10%, rgba(139,92,246,0.08), transparent), radial-gradient(800px 400px at 90% 90%, rgba(6,182,212,0.06), transparent), var(--bg);color:#e6eef8}
-    a{color:inherit;text-decoration:none}
-    header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;gap:12px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
-    nav{display:flex;gap:16px;align-items:center}
-    nav a{padding:8px 12px;border-radius:8px;color:var(--muted);font-weight:600}
-    nav a:hover{background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));color:#fff}
+    body{margin:0;font-family:Inter, 'Noto Sans TC', system-ui, -apple-system, Roboto, 'PingFang TC', sans-serif;background:linear-gradient(180deg,#071022 0%, #07172a 100%);color:#eaf4ff}
+    .wrap{max-width:1100px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{margin:0;font-size:20px}
+    .sub{color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+    @media(min-width:880px){.grid{grid-template-columns:repeat(5,1fr)}}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:260px}
+    .cover{width:100%;aspect-ratio:2/3;border-radius:8px;object-fit:cover;background:#072032}
+    .meta{display:flex;flex-direction:column;gap:4px}
+    .title{font-weight:700}
+    .rank{position:absolute;background:linear-gradient(90deg,var(--accent),#ffb388);color:#071022;padding:6px 8px;border-radius:8px;font-weight:800}
+    .card-wrap{position:relative}
+    .info{font-size:13px;color:var(--muted)}
+    .controls{display:flex;gap:8px;margin-top:12px}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:inherit;cursor:pointer}
+    .loader{display:block;margin:40px auto;color:var(--muted)}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>目前人氣漫畫 Top 10</h1>
+        <div class="sub">資料來源：MyAnimeList（透過 Jikan API）</div>
+      </div>
+      <div class="controls">
+        <button class="btn" id="refresh">重新取得</button>
+        <select id="type" class="btn">
+          <option value="manga">Top Manga</option>
+          <option value="novel">Top Novels</option>
+        </select>
+      </div>
+    </header>
 
-    .container{max-width:1100px;margin:0 auto;padding:20px}
+    <div id="grid" class="grid" aria-live="polite">
+      <div class="loader" id="loader">載入中…</div>
+    </div>
 
-    /* Hero */
-    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;padding:36px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:16px;backdrop-filter:blur(6px);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
-    .hero-text h1{font-size:clamp(28px,4.4vw,44px);margin:0 0 12px 0;line-height:1.05}
-    .hero-text p{color:var(--muted);margin:0 0 18px}
-    .btn-row{display:flex;gap:12px}
-    .btn{padding:10px 16px;border-radius:12px;font-weight:700;border:none;cursor:pointer}
-    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#021022}
-    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    <footer>提示：此頁面使用第三方公開 API（Jikan）抓取 MyAnimeList 的熱門排行，若 API 無回應請稍候或改用代理。若要將資料改為你自己的排名來源，可替換 fetch 的 URL。</footer>
+  </div>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const loader = document.getElementById('loader');
+    const refresh = document.getElementById('refresh');
+    const typeSelect = document.getElementById('type');
+
+    async function fetchTop(type='manga', limit=10){
+      loader.style.display='block';
+      grid.innerHTML='';
+      try{
+        // Jikan v4 Top endpoint
+        const res = await fetch(`https://api.jikan.moe/v4/top/${type}?limit=${limit}`);
+        if(!res.ok) throw new Error('API 回傳錯誤 ' + res.status);
+        const data = await res.json();
+        render(data.data || []);
+      }catch(err){
+        console.error(err);
+        grid.innerHTML = `<div style="grid-column:1/-1;color:#ffb4b4;padding:16px;border-radius:8px;background:rgba(255,0,0,0.03)">載入失敗：${err.message}</div>`;
+      }finally{
+        loader.style.display='none';
+      }
+    }
+
+    function render(items){
+      if(!items.length){
+        grid.innerHTML = '<div class="info">找不到資料。</div>';
+        return;
+      }
+      grid.innerHTML = items.map((it,idx)=>{
+        const title = it.title || it.title_english || '未命名';
+        const img = (it.images && it.images.jpg && it.images.jpg.image_url) ? it.images.jpg.image_url : '';
+        const score = it.score ?? '—';
+        const url = it.url || '#';
+        const rank = it.rank ?? (idx+1);
+        const synopsis = it.synopsis ? it.synopsis.substring(0,120) + (it.synopsis.length>120? '…':'') : '';
+        return `
+          <div class="card">
+            <div class="card-wrap">
+              <img class="cover" src="${img}" alt="${escapeHtml(title)} 封面" onerror="this.style.opacity=0.7;this.style.objectFit='contain'">
+              <div class="rank">#${rank}</div>
+            </div>
+            <div class="meta">
+              <div class="title">${escapeHtml(title)}</div>
+              <div class="info">評分：${score} · ${it.type || ''}</div>
+              <div class="info">${escapeHtml(synopsis)}</div>
+              <div style="margin-top:auto"><a href="${url}" target="_blank" rel="noopener" class="btn" style="text-decoration:none">在 MyAnimeList 查看</a></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, s=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+    }
+
+    refresh.addEventListener('click', ()=> fetchTop(typeSelect.value, 10));
+
+    // initial
+    fetchTop('manga', 10);
+  </script>
+</body>
+</html>
 
     .character-card{position:relative;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border-radius:12px;padding:14px;overflow:hidden}
     .character-art{height:360px;background-image:linear-gradient(to bottom right, rgba(139,92,246,0.18), rgba(6,182,212,0.12));border-radius:8px;display:flex;align-items:end;padding:16px}
