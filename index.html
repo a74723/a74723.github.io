@@ -1,268 +1,160 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
+
+       <!DOCTYPE html>
+<html class="light" lang="zh-TW">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>互動版暢銷小說榜單</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>暢銷小說榜單</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <style>
 .material-symbols-outlined {
-    font-variation-settings: "FILL" 0, "wght" 400;
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
 }
-.card-hover {
-    transition: transform .2s ease, box-shadow .2s ease;
-}
-.card-hover:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 20px rgba(0,0,0,.15);
-}
-.ripple {
-    position: relative;
-    overflow: hidden;
-}
-.ripple::after {
-    content: "";
-    position: absolute;
-    background: rgba(255,255,255,.4);
-    border-radius: 50%;
-    transform: scale(0);
-    opacity: 0;
-    transition: transform .4s, opacity .4s;
-}
-.ripple:active::after {
-    transform: scale(2.5);
-    opacity: 1;
-    transition: 0s;
-}
-.share-modal {
-    animation: fadeIn .2s ease, scaleIn .2s ease;
-}
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes scaleIn { from {transform:scale(.8);} to {transform:scale(1);} }
+body { min-height: 100dvh; }
+.card:hover { transform: scale(1.02); transition: transform 0.3s ease; }
+.filled { color: #facc15; }
 </style>
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        primary: '#135bec',
+        'background-light': '#f6f6f8',
+        'background-dark': '#101622',
+      },
+      fontFamily: {
+        display: ['Inter', 'Noto Sans TC', 'sans-serif']
+      }
+    }
+  }
+};
+</script>
 </head>
+<body class="bg-background-light dark:bg-background-dark font-display transition-colors duration-300">
 
-<body class="bg-gray-100 dark:bg-gray-900 font-sans p-4 transition">
+<div class="flex flex-col min-h-screen">
 
-<!-- 深色模式切換 -->
-<div class="flex justify-end mb-4">
-    <button id="themeToggle" class="p-2 bg-gray-200 dark:bg-gray-700 rounded-full ripple">
-        <span class="material-symbols-outlined text-gray-700 dark:text-gray-200">dark_mode</span>
+<header class="sticky top-0 z-10 flex items-center justify-between bg-background-light dark:bg-background-dark p-4 border-b border-zinc-200 dark:border-zinc-800 backdrop-blur-sm">
+    <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-3xl text-zinc-900 dark:text-zinc-100">local_library</span>
+        <h1 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">暢銷小說榜單</h1>
+    </div>
+    <button id="themeToggle" class="flex items-center justify-center rounded-full h-10 w-10 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+        <span class="material-symbols-outlined">dark_mode</span>
     </button>
+</header>
+
+<main class="p-4 grid gap-4">
+
+<!-- 書卡 -->
+<div class="card flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-3">
+    <div class="flex items-center gap-4">
+        <span class="text-2xl font-bold w-6 text-center text-primary dark:text-primary/90">1</span>
+        <div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAU_u-z2yWv_Aa1o_ki2BRl5qT2x9JiBUeo-HURp2Z2AUco-p-a5S1bBW_wX-JnDVQ2G53IfnyYrxQP0en9ep4qRKnataLfWJoaZX6bDhydgo2FDKIq8uaUO6fgbqGbyypeKfhVSpEZg0bUsM-E1h9_We7MEZPFt20IzIlLqpCL4dH73S9fSBAKWiUd2fDQf8lUmjNf2dKNdnupyCSzS0Evw7gooQHvsyjdc3D_W1zh8IqQ6ZNVAY3G4Ur7zFeUjZjO5sqzhlRm8D4');"></div>
+        <div class="flex-1 flex flex-col justify-center overflow-hidden">
+            <p class="text-base font-bold text-zinc-900 dark:text-zinc-100 truncate">龍族</p>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 truncate">一部融合了奇幻與冒險的史詩級小說...</p>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">作者：李榮道</p>
+        </div>
+        <button class="share-btn flex items-center justify-center h-9 w-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+            <span class="material-symbols-outlined">ios_share</span>
+        </button>
+    </div>
+
+    <!-- 評分區 -->
+    <div class="mt-3 flex items-center gap-2">
+        <div class="stars flex gap-1 cursor-pointer">
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+            <span class="material-symbols-outlined">star</span>
+        </div>
+        <button class="open-comment ml-auto text-sm text-zinc-500 dark:text-zinc-400">新增您的評論...</button>
+    </div>
+
+    <!-- 留言區 -->
+    <div class="comment-box hidden mt-2 flex flex-col gap-2">
+        <textarea class="w-full resize-none rounded-lg border border-zinc-300 dark:border-zinc-700 p-2 text-sm text-zinc-800 dark:text-zinc-200 placeholder-zinc-400" placeholder="分享您的想法..." rows="2"></textarea>
+        <button class="send-comment self-end bg-primary text-white rounded-full h-8 px-3 hover:bg-primary/90">送出</button>
+        <div class="comments-list mt-2 flex flex-col gap-1"></div>
+    </div>
 </div>
 
-<h1 class="text-2xl font-bold text-center mb-6 text-gray-900 dark:text-gray-100">
-    📚 暢銷小說榜單
-</h1>
+<!-- 你可以複製上面的卡片並改變書名、作者、封面URL，即可新增更多書 -->
 
-<div id="book-list" class="flex flex-col gap-6"></div>
+</main>
 
-<!-- 分享 modal -->
-<div id="shareModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center">
-    <div class="share-modal bg-white dark:bg-gray-800 p-6 rounded-xl shadow max-w-xs w-full">
-        <h2 class="text-lg font-bold mb-4 text-gray-800 dark:text-gray-100">分享這本書</h2>
-
-        <button id="copyLinkBtn" class="w-full py-2 bg-blue-600 text-white rounded mb-2 ripple">
-            📋 複製連結
-        </button>
-        <button class="w-full py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded ripple">
-            🌐 分享到社群（示意）
-        </button>
-
-        <button id="closeShare" class="mt-4 w-full py-2 bg-red-500 text-white rounded ripple">關閉</button>
+<!-- 分享彈窗 -->
+<div id="shareModal" class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50">
+    <div class="bg-white dark:bg-zinc-900 rounded-lg p-4 w-80">
+        <h3 class="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-2">分享書籍</h3>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-4">分享這本書給朋友吧！</p>
+        <button id="closeShare" class="bg-primary text-white px-3 py-1 rounded hover:bg-primary/90">關閉</button>
     </div>
 </div>
 
 <script>
-/* ==========================================================
-   書籍資料
-========================================================== */
-const books = [
-  { rank: 1, title: "龍族", desc: "奇幻冒險史詩。", author: "李榮道",
-    img:"https://picsum.photos/seed/a/200" },
-  { rank: 2, title: "沙丘", desc: "科幻權力鬥爭。", author: "法蘭克·赫伯特",
-    img:"https://picsum.photos/seed/b/200" },
-  { rank: 3, title: "冰與火之歌", desc: "七國爭霸。", author: "喬治·馬丁",
-    img:"https://picsum.photos/seed/c/200" },
-  { rank: 4, title: "魔戒", desc: "友情與冒險。", author: "托爾金",
-    img:"https://picsum.photos/seed/d/200" },
-  { rank: 5, title: "哈利波特", desc: "魔法學院冒險。", author: "羅琳",
-    img:"https://picsum.photos/seed/e/200" }
-];
+// 深色模式
+const themeToggle = document.getElementById("themeToggle");
+themeToggle.addEventListener("click", () => {
+    document.documentElement.classList.toggle("dark");
+});
 
-/* ==========================================================
-   LocalStorage 保存功能
-========================================================== */
-const savedFavorites = JSON.parse(localStorage.getItem("favBooks") || "[]");
-const savedComments = JSON.parse(localStorage.getItem("bookComments") || "{}");
+// 分享彈窗
+const shareBtns = document.querySelectorAll(".share-btn");
+const shareModal = document.getElementById("shareModal");
+const closeShare = document.getElementById("closeShare");
+shareBtns.forEach(btn => btn.addEventListener("click", () => shareModal.classList.remove("hidden")));
+closeShare.addEventListener("click", () => shareModal.classList.add("hidden"));
 
-/* ==========================================================
-   生成書卡片
-========================================================== */
-books.forEach(book => {
-    const card = document.createElement("div");
-    card.className = "bg-white dark:bg-gray-800 rounded-xl shadow p-4 card-hover";
-
-    card.innerHTML = `
-      <div class="flex gap-4 items-center">
-        <span class="text-2xl font-bold text-blue-600">${book.rank}</span>
-
-        <div class="h-24 w-16 bg-cover bg-center rounded"
-             style="background-image:url('${book.img}')"></div>
-
-        <div class="flex-1">
-            <p class="text-lg font-bold text-gray-900 dark:text-gray-100">${book.title}</p>
-            <p class="text-sm text-gray-500 mt-1">${book.desc}</p>
-            <p class="text-sm text-gray-500 mt-1">作者：${book.author}</p>
-        </div>
-
-        <!-- 收藏 -->
-        <button class="fav-btn ripple size-10 flex items-center justify-center rounded-full
-                       ${savedFavorites.includes(book.title) ? "bg-red-500 text-white" : "bg-gray-200 dark:bg-gray-700"}">
-            <span class="material-symbols-outlined">
-                favorite
-            </span>
-        </button>
-
-        <!-- 分享 -->
-        <button class="share-btn ripple size-10 flex items-center justify-center rounded-full
-          hover:bg-gray-200 dark:hover:bg-gray-700">
-            <span class="material-symbols-outlined">ios_share</span>
-        </button>
-      </div>
-
-      <!-- 評論區 -->
-      <div class="mt-4">
-        <button class="open-comment w-full text-left px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-300">
-          新增您的評論...
-        </button>
-
-        <div class="comment-box mt-3 hidden">
-            <!-- 星星評分 -->
-            <div class="star-edit flex gap-1 text-yellow-400 text-xl mb-3 cursor-pointer">
-                <span class="material-symbols-outlined">star</span>
-                <span class="material-symbols-outlined">star</span>
-                <span class="material-symbols-outlined">star</span>
-                <span class="material-symbols-outlined">star</span>
-                <span class="material-symbols-outlined">star</span>
-            </div>
-
-            <!-- 輸入評論 -->
-            <div class="relative">
-                <textarea class="comment-text w-full p-3 rounded border border-gray-300 dark:border-gray-600
-                        bg-transparent text-gray-800 dark:text-gray-200"
-                    rows="3" placeholder="分享您的想法..."></textarea>
-
-                <button class="send-comment absolute right-2 bottom-2 size-8 rounded-full bg-blue-600 text-white flex items-center justify-center ripple">
-                    <span class="material-symbols-outlined text-sm">send</span>
-                </button>
-            </div>
-
-            <!-- 顯示留言 -->
-            <div class="comment-display mt-3 flex flex-col gap-2"></div>
-        </div>
-      </div>
-    `;
-
-    document.getElementById("book-list").appendChild(card);
-
-    /* ==========================================================
-       功能綁定
-    ========================================================= */
-
-    // 收藏功能
-    const favBtn = card.querySelector(".fav-btn");
-    favBtn.addEventListener("click", () => {
-        if (savedFavorites.includes(book.title)) {
-            savedFavorites.splice(savedFavorites.indexOf(book.title), 1);
-            favBtn.classList.remove("bg-red-500","text-white");
-            favBtn.classList.add("bg-gray-200","dark:bg-gray-700");
-        } else {
-            savedFavorites.push(book.title);
-            favBtn.classList.add("bg-red-500","text-white");
-        }
-        localStorage.setItem("favBooks", JSON.stringify(savedFavorites));
-    });
-
-    // 分享 modal
-    const shareBtn = card.querySelector(".share-btn");
-    shareBtn.addEventListener("click", () => {
-        document.getElementById("shareModal").classList.remove("hidden");
-        document.getElementById("copyLinkBtn").onclick = () => {
-            navigator.clipboard.writeText(location.href);
-            alert("連結已複製！");
-        };
-    });
-
-    // 關閉分享
-    document.getElementById("closeShare").onclick = () => {
-        document.getElementById("shareModal").classList.add("hidden");
-    };
-
-    // 展開評論
-    const openComment = card.querySelector(".open-comment");
-    const commentBox = card.querySelector(".comment-box");
-    openComment.addEventListener("click", () => {
-        commentBox.classList.toggle("hidden");
-    });
-
-    // 星星評分動畫
-    const stars = card.querySelectorAll(".star-edit span");
+// 星星評分
+document.querySelectorAll(".stars").forEach(starContainer => {
+    const stars = starContainer.querySelectorAll("span");
     stars.forEach((star, idx) => {
-        star.addEventListener("mouseenter", () => {
-            stars.forEach((s,i)=> s.style.fontVariationSettings = i<=idx?"'FILL' 1":"'FILL' 0");
+        star.addEventListener("mouseover", () => {
+            stars.forEach((s, i) => s.classList.toggle("filled", i <= idx));
         });
         star.addEventListener("click", () => {
-            card.dataset.rating = idx + 1;
+            stars.forEach((s, i) => s.classList.toggle("filled", i <= idx));
         });
     });
-    card.querySelector(".star-edit").addEventListener("mouseleave", () => {
-        const rating = card.dataset.rating || 0;
-        stars.forEach((s,i)=> s.style.fontVariationSettings = i<rating?"'FILL' 1":"'FILL' 0");
-    });
-
-    // 顯示歷史留言
-    const displayArea = card.querySelector(".comment-display");
-    const comments = savedComments[book.title] || [];
-    comments.forEach(c => displayArea.innerHTML += `<div class="p-2 bg-gray-200 dark:bg-gray-700 rounded">${c}</div>`);
-
-    // 新留言
-    const sendBtn = card.querySelector(".send-comment");
-    sendBtn.addEventListener("click", () => {
-        const textarea = card.querySelector(".comment-text");
-        const text = textarea.value.trim();
-        if (!text) return alert("請輸入內容！");
-
-        // 顯示
-        displayArea.innerHTML += `<div class="p-2 bg-gray-200 dark:bg-gray-700 rounded">${text}</div>`;
-
-        // 儲存
-        if (!savedComments[book.title]) savedComments[book.title] = [];
-        savedComments[book.title].push(text);
-        localStorage.setItem("bookComments", JSON.stringify(savedComments));
-
-        textarea.value = "";
+    starContainer.addEventListener("mouseout", () => {
+        stars.forEach(s => s.classList.remove("filled"));
     });
 });
 
-/* ==========================================================
-   深色模式切換
-========================================================== */
-const body = document.body;
-const themeToggle = document.getElementById("themeToggle");
-
-if (localStorage.getItem("theme") === "dark") {
-    body.classList.add("dark");
-}
-
-themeToggle.onclick = () => {
-    body.classList.toggle("dark");
-    localStorage.setItem("theme", body.classList.contains("dark") ? "dark" : "light");
-};
+// 留言區
+document.querySelectorAll(".open-comment").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const box = btn.closest(".card").querySelector(".comment-box");
+        box.classList.toggle("hidden");
+    });
+});
+document.querySelectorAll(".send-comment").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const box = btn.closest(".comment-box");
+        const textarea = box.querySelector("textarea");
+        const commentText = textarea.value.trim();
+        if(commentText){
+            const div = document.createElement("div");
+            div.textContent = commentText;
+            div.className = "text-sm text-zinc-700 dark:text-zinc-200 border-b border-zinc-200 dark:border-zinc-700 pb-1";
+            box.querySelector(".comments-list").appendChild(div);
+            textarea.value = "";
+        }
+    });
+});
 </script>
 
 </body>
 </html>
+
