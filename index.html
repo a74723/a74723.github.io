@@ -1,16 +1,42 @@
-<!DOCTYPE html>
-<html>
-<body>
-
-<button id="btn">按我測試 JavaScript</button>
-
-<p id="result" style="margin-top:20px;font-size:20px;color:blue;"></p>
-
 <script>
-document.getElementById("btn").addEventListener("click", () => {
-    document.getElementById("result").innerText = "JavaScript 已成功執行！🎉";
+// ------------------------------
+// 分享按鈕：從圖標判斷
+// ------------------------------
+document.querySelectorAll("button span.material-symbols-outlined").forEach(icon => {
+    if (icon.innerText.trim() === "ios_share") {
+        icon.parentElement.addEventListener("click", () => {
+            alert("📢 分享功能觸發成功！");
+        });
+    }
+});
+
+// ------------------------------
+// 設定按鈕
+// ------------------------------
+document.querySelectorAll("button span.material-symbols-outlined").forEach(icon => {
+    if (icon.innerText.trim() === "settings") {
+        icon.parentElement.addEventListener("click", () => {
+            alert("⚙️ 設定按鈕已被點擊！");
+        });
+    }
+});
+
+// ------------------------------
+// 送出評論（你說「有反應」所以保留）
+// ------------------------------
+document.querySelectorAll(".send-comment").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const textArea = btn.closest(".relative").querySelector(".comment-text");
+        const content = textArea.value.trim();
+
+        if (!content) {
+            alert("請輸入評論內容！");
+            return;
+        }
+
+        alert("評論已送出！\n\n" + content);
+        textArea.value = "";
+    });
 });
 </script>
 
-</body>
-</html>
