@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html class="light" lang="zh-TW">
 <head>
@@ -55,21 +54,67 @@ tailwind.config = {
 <main class="p-4 grid gap-4">
 
 <!-- 書卡範例 -->
-<div class="card flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-3" data-link="https://example.com/book1">
-    <div class="flex items-center gap-4">
-        <span class="text-2xl font-bold w-6 text-center text-primary dark:text-primary/90">1</span>
-        <div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAU_u-z2yWv_Aa1o_ki2BRl5qT2x9JiBUeo-HURp2Z2AUco-p-a5S1bBW_wX-JnDVQ2G53IfnyYrxQP0en9ep4qRKnataLfWJoaZX6bDhydgo2FDKIq8uaUO6fgbqGbyypeKfhVSpEZg0bUsM-E1h9_We7MEZPFt20IzIlLqpCL4dH73S9fSBAKWiUd2fDQf8lUmjNf2dKNdnupyCSzS0Evw7gooQHvsyjdc3D_W1zh8IqQ6ZNVAY3G4Ur7zFeUjZjO5sqzhlRm8D4');"></div>
-        <div class="flex-1 flex flex-col justify-center overflow-hidden">
-            <p class="text-base font-bold text-zinc-900 dark:text-zinc-100 truncate">龍族</p>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 truncate">一部融合了奇幻與冒險的史詩級小說...</p>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">作者：李榮道</p>
-        </div>
-        <button class="share-btn flex items-center justify-center h-9 w-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-            <span class="material-symbols-outlined">ios_share</span>
-        </button>
-    </div>
+<script>
+const books = [
+  {
+    rank: 1,
+    title: "龍族",
+    author: "李榮道",
+    description: "一部融合了奇幻與冒險的史詩級小說...",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAU_u-z2yWv_Aa1o_ki2BRl5qT2x9JiBUeo-HURp2Z2AUco-p-a5S1bBW_wX-JnDVQ2G53IfnyYrxQP0en9ep4qRKnataLfWJoaZX6bDhydgo2FDKIq8uaUO6fgbqGbyypeKfhVSpEZg0bUsM-E1h9_We7MEZPFt20IzIlLqpCL4dH73S9fSBAKWiUd2fDQf8lUmjNf2dKNdnupyCSzS0Evw7gooQHvsyjdc3D_W1zh8IqQ6ZNVAY3G4Ur7zFeUjZjO5sqzhlRm8D4",
+    link: "https://example.com/book1"
+  },
+  {
+    rank: 2,
+    title: "三體",
+    author: "劉慈欣",
+    description: "科幻經典，宇宙文明的衝突與人類命運的抉擇。",
+    image: "https://upload.wikimedia.org/wikipedia/zh/7/70/Three_Body_Problem_book_cover.jpg",
+    link: "https://example.com/book2"
+  },
+  {
+    rank: 3,
+    title: "哈利波特：魔法石",
+    author: "J.K.羅琳",
+    description: "魔法世界的冒險，年輕巫師哈利的成長故事。",
+    image: "https://upload.wikimedia.org/wikipedia/en/6/6b/Harry_Potter_and_the_Philosopher%27s_Stone_Book_Cover.jpg",
+    link: "https://example.com/book3"
+  },
+  {
+    rank: 4,
+    title: "挪威的森林",
+    author: "村上春樹",
+    description: "細膩描寫青春、愛與失落的文學作品。",
+    image: "https://upload.wikimedia.org/wikipedia/en/1/1b/Norwegian_Wood_novel.jpg",
+    link: "https://example.com/book4"
+  },
+  {
+    rank: 5,
+    title: "百年孤寂",
+    author: "加夫列爾·加西亞·馬爾克斯",
+    description: "魔幻現實主義代表作，描述布恩迪亞家族七代人的故事。",
+    image: "https://upload.wikimedia.org/wikipedia/en/4/4e/Cien_A%C3%B1os_de_Soledad_%28book_cover%29.jpg",
+    link: "https://example.com/book5"
+  }
+];
 
-    <!-- 星星評分 -->
+books.forEach(book => {
+  const card = document.createElement("div");
+  card.className = "card flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm p-3";
+  card.dataset.link = book.link;
+  card.innerHTML = `
+    <div class="flex items-center gap-4">
+      <span class="text-2xl font-bold w-6 text-center text-primary dark:text-primary/90">${book.rank}</span>
+      <div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" style="background-image:url('${book.image}');"></div>
+      <div class="flex-1 flex flex-col justify-center overflow-hidden">
+          <p class="text-base font-bold text-zinc-900 dark:text-zinc-100 truncate">${book.title}</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1 truncate">${book.description}</p>
+          <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">作者：${book.author}</p>
+      </div>
+      <button class="share-btn flex items-center justify-center h-9 w-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+          <span class="material-symbols-outlined">ios_share</span>
+      </button>
+    </div>
     <div class="mt-3 flex items-center gap-2">
         <div class="stars flex gap-1 cursor-pointer">
             <span class="material-symbols-outlined" data-value="1">star</span>
@@ -80,16 +125,15 @@ tailwind.config = {
         </div>
         <button class="open-comment ml-auto text-sm text-zinc-500 dark:text-zinc-400">新增您的評論...</button>
     </div>
-
-    <!-- 留言區 -->
     <div class="comment-box hidden mt-2 flex flex-col gap-2">
         <textarea class="w-full resize-none rounded-lg border border-zinc-300 dark:border-zinc-700 p-2 text-sm text-zinc-800 dark:text-zinc-200 placeholder-zinc-400" placeholder="分享您的想法..." rows="2"></textarea>
         <button class="send-comment self-end bg-primary text-white rounded-full h-8 px-3 hover:bg-primary/90">送出</button>
         <div class="comments-list mt-2 flex flex-col gap-1"></div>
     </div>
-</div>
-
-</main>
+  `;
+  document.querySelector("main").appendChild(card);
+});
+</script>
 
 <!-- 分享彈窗 -->
 <div id="shareModal" class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50">
@@ -109,20 +153,19 @@ themeToggle.addEventListener("click", () => {
 });
 
 // 分享功能
-const shareBtns = document.querySelectorAll(".share-btn");
 const shareModal = document.getElementById("shareModal");
 const closeShare = document.getElementById("closeShare");
 const shareText = document.getElementById("shareText");
 const copyLink = document.getElementById("copyLink");
 let currentLink = '';
 
-shareBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const card = btn.closest(".card");
+document.addEventListener("click", e => {
+    if(e.target.closest(".share-btn")){
+        const card = e.target.closest(".card");
         currentLink = card.dataset.link;
         shareText.textContent = "分享這本書給朋友吧！\n" + currentLink;
         shareModal.classList.remove("hidden");
-    });
+    }
 });
 
 closeShare.addEventListener("click", () => shareModal.classList.add("hidden"));
@@ -133,46 +176,53 @@ copyLink.addEventListener("click", () => {
 });
 
 // 星星評分
-document.querySelectorAll(".stars").forEach(starContainer => {
-    const stars = starContainer.querySelectorAll("span");
-    let rating = 0;
-    stars.forEach(star => {
-        const value = parseInt(star.dataset.value);
-        star.addEventListener("mouseover", () => {
-            stars.forEach(s => s.classList.toggle("filled", parseInt(s.dataset.value) <= value));
+function initStars(){
+    document.querySelectorAll(".stars").forEach(starContainer => {
+        const stars = starContainer.querySelectorAll("span");
+        let rating = 0;
+        stars.forEach(star => {
+            const value = parseInt(star.dataset.value);
+            star.addEventListener("mouseover", () => {
+                stars.forEach(s => s.classList.toggle("filled", parseInt(s.dataset.value) <= value));
+            });
+            star.addEventListener("click", () => {
+                rating = value;
+                stars.forEach(s => s.classList.toggle("filled", parseInt(s.dataset.value) <= rating));
+            });
         });
-        star.addEventListener("click", () => {
-            rating = value;
+        starContainer.addEventListener("mouseout", () => {
             stars.forEach(s => s.classList.toggle("filled", parseInt(s.dataset.value) <= rating));
         });
     });
-    starContainer.addEventListener("mouseout", () => {
-        stars.forEach(s => s.classList.toggle("filled", parseInt(s.dataset.value) <= rating));
-    });
-});
+}
+initStars();
 
 // 留言區
-document.querySelectorAll(".open-comment").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const box = btn.closest(".card").querySelector(".comment-box");
-        box.classList.toggle("hidden");
+function initComments(){
+    document.querySelectorAll(".open-comment").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const box = btn.closest(".card").querySelector(".comment-box");
+            box.classList.toggle("hidden");
+        });
     });
-});
-document.querySelectorAll(".send-comment").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const box = btn.closest(".comment-box");
-        const textarea = box.querySelector("textarea");
-        const commentText = textarea.value.trim();
-        if(commentText){
-            const div = document.createElement("div");
-            div.textContent = commentText;
-            div.className = "text-sm text-zinc-700 dark:text-zinc-200 border-b border-zinc-200 dark:border-zinc-700 pb-1";
-            box.querySelector(".comments-list").appendChild(div);
-            textarea.value = "";
-        }
+    document.querySelectorAll(".send-comment").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const box = btn.closest(".comment-box");
+            const textarea = box.querySelector("textarea");
+            const commentText = textarea.value.trim();
+            if(commentText){
+                const div = document.createElement("div");
+                div.textContent = commentText;
+                div.className = "text-sm text-zinc-700 dark:text-zinc-200 border-b border-zinc-200 dark:border-zinc-700 pb-1";
+                box.querySelector(".comments-list").appendChild(div);
+                textarea.value = "";
+            }
+        });
     });
-});
+}
+initComments();
 </script>
 
 </body>
 </html>
+
