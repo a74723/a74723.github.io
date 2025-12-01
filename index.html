@@ -16,7 +16,14 @@ document.querySelectorAll("button span.material-symbols-outlined").forEach(icon 
 
 <script>
 // ------------------------------
-// 分享按鈕：從圖標判斷
+/document.querySelectorAll("button span.material-symbols-outlined").forEach(icon => {
+    if (icon.innerText.trim() === "ios_share") {
+        icon.parentElement.addEventListener("click", () => {
+            console.log("分享按鈕已被點擊");
+            alert("📢 分享功能尚未串接！");
+        });
+    }
+});
 // ------------------------------
 document.querySelectorAll("button span.material-symbols-outlined").forEach(icon => {
     if (icon.innerText.trim() === "ios_share") {
@@ -27,7 +34,13 @@ document.querySelectorAll("button span.material-symbols-outlined").forEach(icon 
 });
 
 // ------------------------------
-// 設定按鈕
+document.querySelectorAll("button span.material-symbols-outlined").forEach(icon => {
+    if (icon.innerText.trim() === "settings") {
+        icon.parentElement.addEventListener("click", () => {
+            alert("⚙️ 這裡可以加入設定功能");
+        });
+    }
+});
 // ------------------------------
 document.querySelectorAll("button span.material-symbols-outlined").forEach(icon => {
     if (icon.innerText.trim() === "settings") {
