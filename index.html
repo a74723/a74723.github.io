@@ -1,115 +1,234 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>目前人氣漫畫 Top 10</title>
-  <style>
-    :root{--bg:#0f1724;--card:#061219;--accent:#ff7a59;--muted:#9aa7b8}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter, 'Noto Sans TC', system-ui, -apple-system, Roboto, 'PingFang TC', sans-serif;background:linear-gradient(180deg,#071022 0%, #07172a 100%);color:#eaf4ff}
-    .wrap{max-width:1100px;margin:28px auto;padding:20px}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    h1{margin:0;font-size:20px}
-    .sub{color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
-    @media(min-width:880px){.grid{grid-template-columns:repeat(5,1fr)}}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:260px}
-    .cover{width:100%;aspect-ratio:2/3;border-radius:8px;object-fit:cover;background:#072032}
-    .meta{display:flex;flex-direction:column;gap:4px}
-    .title{font-weight:700}
-    .rank{position:absolute;background:linear-gradient(90deg,var(--accent),#ffb388);color:#071022;padding:6px 8px;border-radius:8px;font-weight:800}
-    .card-wrap{position:relative}
-    .info{font-size:13px;color:var(--muted)}
-    .controls{display:flex;gap:8px;margin-top:12px}
-    .btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:inherit;cursor:pointer}
-    .loader{display:block;margin:40px auto;color:var(--muted)}
-    footer{margin-top:18px;color:var(--muted);font-size:13px}
+<!DOCTYPE html>
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>暢銷小說榜單</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Noto+Sans+TC:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans TC", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
   </style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>目前人氣漫畫 Top 10</h1>
-        <div class="sub">資料來源：MyAnimeList（透過 Jikan API）</div>
-      </div>
-      <div class="controls">
-        <button class="btn" id="refresh">重新取得</button>
-        <select id="type" class="btn">
-          <option value="manga">Top Manga</option>
-          <option value="novel">Top Novels</option>
-        </select>
-      </div>
-    </header>
-
-    <div id="grid" class="grid" aria-live="polite">
-      <div class="loader" id="loader">載入中…</div>
-    </div>
-
-    <footer>提示：此頁面使用第三方公開 API（Jikan）抓取 MyAnimeList 的熱門排行，若 API 無回應請稍候或改用代理。若要將資料改為你自己的排名來源，可替換 fetch 的 URL。</footer>
-  </div>
-
-  <script>
-    const grid = document.getElementById('grid');
-    const loader = document.getElementById('loader');
-    const refresh = document.getElementById('refresh');
-    const typeSelect = document.getElementById('type');
-
-    async function fetchTop(type='manga', limit=10){
-      loader.style.display='block';
-      grid.innerHTML='';
-      try{
-        // Jikan v4 Top endpoint
-        const res = await fetch(`https://api.jikan.moe/v4/top/${type}?limit=${limit}`);
-        if(!res.ok) throw new Error('API 回傳錯誤 ' + res.status);
-        const data = await res.json();
-        render(data.data || []);
-      }catch(err){
-        console.error(err);
-        grid.innerHTML = `<div style="grid-column:1/-1;color:#ffb4b4;padding:16px;border-radius:8px;background:rgba(255,0,0,0.03)">載入失敗：${err.message}</div>`;
-      }finally{
-        loader.style.display='none';
-      }
+<style>
+    body {
+      min-height: max(884px, 100dvh);
     }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<header class="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 p-4 backdrop-blur-sm justify-between border-b border-zinc-200 dark:border-zinc-800">
+<div class="flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined text-zinc-900 dark:text-zinc-100 text-3xl">local_library</span>
+</div>
+<h1 class="text-zinc-900 dark:text-zinc-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">暢銷小說榜單</h1>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 text-zinc-900 dark:text-zinc-100 gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<div class="px-4 pt-4 pb-2">
+<div class="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary pl-4 pr-3">
+<p class="text-white text-sm font-medium leading-normal">台灣</p>
+<span class="material-symbols-outlined text-white" style="font-size: 20px;">expand_more</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-zinc-200 dark:bg-zinc-800 pl-4 pr-3 hover:bg-zinc-300 dark:hover:bg-zinc-700">
+<p class="text-zinc-900 dark:text-zinc-100 text-sm font-medium leading-normal">美國</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-zinc-200 dark:bg-zinc-800 pl-4 pr-3 hover:bg-zinc-300 dark:hover:bg-zinc-700">
+<p class="text-zinc-900 dark:text-zinc-100 text-sm font-medium leading-normal">英國</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-zinc-200 dark:bg-zinc-800 pl-4 pr-3 hover:bg-zinc-300 dark:hover:bg-zinc-700">
+<p class="text-zinc-900 dark:text-zinc-100 text-sm font-medium leading-normal">日本</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-zinc-200 dark:bg-zinc-800 pl-4 pr-3 hover:bg-zinc-300 dark:hover:bg-zinc-700">
+<p class="text-zinc-900 dark:text-zinc-100 text-sm font-medium leading-normal">法國</p>
+</button>
+</div>
+</div>
+<main class="flex flex-col gap-4 p-4 pt-2">
+<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
+<div class="flex items-center gap-4 p-3">
+<span class="text-2xl font-bold w-6 text-center text-primary dark:text-primary/90">1</span>
+<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for Dragon Raja" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAU_u-z2yWv_Aa1o_ki2BRl5qT2x9JiBUeo-HURp2Z2AUco-p-a5S1bBW_wX-JnDVQ2G53IfnyYrxQP0en9ep4qRKnataLfWJoaZX6bDhydgo2FDKIq8uaUO6fgbqGbyypeKfhVSpEZg0bUsM-E1h9_We7MEZPFt20IzIlLqpCL4dH73S9fSBAKWiUd2fDQf8lUmjNf2dKNdnupyCSzS0Evw7gooQHvsyjdc3D_W1zh8IqQ6ZNVAY3G4Ur7zFeUjZjO5sqzhlRm8D4");'></div>
+<div class="flex flex-1 flex-col justify-center overflow-hidden">
+<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">龍族</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">一部融合了奇幻與冒險的史詩級小說...</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：李榮道</p>
+</div>
+<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
+<div class="flex items-center gap-4">
+<div class="flex items-center text-zinc-400">
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                        新增您的評論...
+                    </button>
+</div>
+</div>
+</div>
+<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
+<div class="flex items-center gap-4 p-3">
+<span class="text-2xl font-bold w-6 text-center text-zinc-600 dark:text-zinc-400">2</span>
+<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for Dune" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA7FFlEaiflyGiL7HGummAtfprYA9vhNHPyUbLJczJ99LM6VIKqn038I7nofsJOXoSLvyxCPnHa0uczfD0aYbvigSK2ncXqSQ9VXVMznOLO6pqPJYtf0o1VS-h6Auoub-kGhNvrKn6yH-21iUzqOiXr8kmaPCMlx-YY0ERJxM7wVHMoobw2KO4PR4pybl6xGsn3lorxUo3O4XuYw8ggnRxsz3F18tTqMARHuiZMj4S7LvgflUlxe_6L7nZ9trIJu2Lu-DOjZvmVuVw");'></div>
+<div class="flex flex-1 flex-col justify-center overflow-hidden">
+<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">沙丘</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">在遙遠的未來，一個關於權力、宗教和生態...</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：法蘭克·赫伯特</p>
+</div>
+<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
+<div class="flex items-center gap-4">
+<div class="flex items-center text-zinc-400">
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                        新增您的評論...
+                    </button>
+</div>
+</div>
+</div>
+<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
+<div class="flex items-center gap-4 p-3">
+<span class="text-2xl font-bold w-6 text-center text-zinc-600 dark:text-zinc-400">3</span>
+<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for A Song of Ice and Fire" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDNDmUc0yQBn0Mxj2wkIlhxxm04-FFcOnkzGQ8qt6vQS2tfEKRjxV8-QKKtxeZ-AwkwLrU2DrmGvw1xIaDxrGtUwuXbVxTYPTEQlf1UZuqBNE-ffCY_G8zetCDm6DI8NPbAiBNz_PheRyX6El83jyoGTFwpsqu7tCo9w9oaPLOpluzrvyFPD161kHamPxL7w2NgKW28hCjP-x8JwqubjXHLd7JByoZkwJ-13ia1V2pi4_GXHI1E6E-f1GfAri90tXLI06ws9SplQkc");'></div>
+<div class="flex flex-1 flex-col justify-center overflow-hidden">
+<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">冰與火之歌</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">在維斯特洛大陸上，七大王國為爭奪鐵王座...</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：喬治·R·R·馬丁</p>
+</div>
+<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
+<div class="flex items-center gap-4">
+<div class="flex items-center text-zinc-400">
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                        新增您的評論...
+                    </button>
+</div>
+</div>
+</div>
+<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
+<div class="flex items-center gap-4 p-3">
+<span class="text-2xl font-bold w-6 text-center text-zinc-600 dark:text-zinc-400">4</span>
+<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for The Lord of the Rings" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBrIDi4VZqYfuNdEMD5wuzT2ag5vSx1lXI9p_1EGwhDFi44yOk5PPIoCpZYLw5NJoCxZM9ny2zekBKwDQeOMlwqXZmsZvBtCYRvpPf3tsVqUyipaBryzT37O_1fn7Jw5YC3rIo18inDw07u8xIZduo6rHtFo47sGs6YCn-_GpqUlmQIsixh3joEfAYbdhzAWyef-REgadPIndz_8zawrrJBRZCUFD6Hg8y19AmharGSMQ8i-XII4hZUV5Mb6psh_1VKtcdVZRcBewA");'></div>
+<div class="flex flex-1 flex-col justify-center overflow-hidden">
+<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">魔戒</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">一場關於友誼、勇氣與對抗邪惡的史詩旅程...</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：J.R.R. 托爾金</p>
+</div>
+<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
+<div class="flex items-center gap-4">
+<div class="flex items-center text-zinc-400">
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                        新增您的評論...
+                    </button>
+</div>
+</div>
+</div>
+<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
+<div class="flex items-center gap-4 p-3">
+<span class="text-2xl font-bold w-6 text-center text-zinc-600 dark:text-zinc-400">5</span>
+<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for Harry Potter" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCgazYzj8pj61Oiaz8xUxr16Xw5Z-SRvcNy4L5D10j10QapnZPHxJdfk15ga3rdV4phu2tX_5jrV6GAXeq7gysfBa4R7SvC0av8dEyl8hPJDkPBKsWD7OOrDY6bRsgCY_RzkdaBV_dKK5HcV5wLVatAt2xmdl1Ag3GqFwHwUrU8GWcknRVXTUmGrdl8eHMWhiMNz5bC0ogjSj5L7_YsXrWQXdcGEKftihhHF1tIp0QyACmvixhVq_W9PGnteHDluEa_1rZJlRK9I20");'></div>
+<div class="flex flex-1 flex-col justify-center overflow-hidden">
+<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">哈利波特</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">一位年輕巫師在魔法學校的成長與冒險故事...</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：J.K. 羅琳</p>
+</div>
+<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
+<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
+<div class="flex items-center gap-4">
+<div class="flex items-center text-zinc-400">
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                        新增您的評論...
+                    </button>
+</div>
+</div>
+</div>
+</main>
+</div>
 
-    function render(items){
-      if(!items.length){
-        grid.innerHTML = '<div class="info">找不到資料。</div>';
-        return;
-      }
-      grid.innerHTML = items.map((it,idx)=>{
-        const title = it.title || it.title_english || '未命名';
-        const img = (it.images && it.images.jpg && it.images.jpg.image_url) ? it.images.jpg.image_url : '';
-        const score = it.score ?? '—';
-        const url = it.url || '#';
-        const rank = it.rank ?? (idx+1);
-        const synopsis = it.synopsis ? it.synopsis.substring(0,120) + (it.synopsis.length>120? '…':'') : '';
-        return `
-          <div class="card">
-            <div class="card-wrap">
-              <img class="cover" src="${img}" alt="${escapeHtml(title)} 封面" onerror="this.style.opacity=0.7;this.style.objectFit='contain'">
-              <div class="rank">#${rank}</div>
-            </div>
-            <div class="meta">
-              <div class="title">${escapeHtml(title)}</div>
-              <div class="info">評分：${score} · ${it.type || ''}</div>
-              <div class="info">${escapeHtml(synopsis)}</div>
-              <div style="margin-top:auto"><a href="${url}" target="_blank" rel="noopener" class="btn" style="text-decoration:none">在 MyAnimeList 查看</a></div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function escapeHtml(str){
-      return String(str).replace(/[&<>"']/g, s=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
-    }
-
-    refresh.addEventListener('click', ()=> fetchTop(typeSelect.value, 10));
-
-    // initial
-    fetchTop('manga', 10);
-  </script>
-</body>
-</html>
+</body></html>
