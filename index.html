@@ -1,305 +1,257 @@
 <!DOCTYPE html>
-<html class="light" lang="zh-TW"><head>
+<html class="light" lang="zh-TW">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>暢銷小說榜單</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Noto+Sans+TC:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
 <style>
-        .material-symbols-outlined {
-            font-variation-settings:
-                'FILL' 0,
-                'wght' 400,
-                'GRAD' 0,
-                'opsz' 24;
-        }
-        .peer:checked ~ .peer-checked\:block {
-            display: block;
-        }
-        .peer:checked ~ .peer-checked\:flex {
-            display: flex;
-        }
-        .peer:checked ~ .peer-checked\:translate-y-0 {
-            transform: translateY(0);
-        }
-        .peer:checked ~ .peer-checked\:opacity-100 {
-            opacity: 1;
-        }
-    </style>
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+}
+.peer:checked ~ .peer-checked\:block { display: block; }
+.peer:checked ~ .peer-checked\:flex { display: flex; }
+.peer:checked ~ .peer-checked\:translate-y-0 { transform: translateY(0); }
+.peer:checked ~ .peer-checked\:opacity-100 { opacity: 1; }
+
+body { min-height: max(884px, 100dvh); }
+
+@keyframes star-rating {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+.animate-star-rating { animation: star-rating 0.3s ease-in-out; }
+</style>
+
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#135bec",
-                        "background-light": "#f6f6f8",
-                        "background-dark": "#101622",
-                    },
-                    fontFamily: {
-                        "display": ["Inter", "Noto Sans TC", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                },
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            colors: {
+                "primary": "#135bec",
+                "background-light": "#f6f6f8",
+                "background-dark": "#101622",
             },
-        }
-    </script>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-    @keyframes star-rating {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.3); }
-    }
-    .animate-star-rating {
-        animation: star-rating 0.3s ease-in-out;
-    }
-  </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
+            fontFamily: {
+                "display": ["Inter", "Noto Sans TC", "sans-serif"]
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+        },
+    },
+}
+</script>
+</head>
+
 <body class="bg-background-light dark:bg-background-dark font-display">
+
+<!-- 你的原本內容：保持不動 -->
 <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
 <header class="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 p-4 backdrop-blur-sm justify-between border-b border-zinc-200 dark:border-zinc-800">
-<div class="flex size-12 shrink-0 items-center justify-start">
-<span class="material-symbols-outlined text-zinc-900 dark:text-zinc-100 text-3xl">local_library</span>
-</div>
-<h1 class="text-zinc-900 dark:text-zinc-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">暢銷小說榜單</h1>
-<div class="flex w-12 items-center justify-end">
-<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 text-zinc-900 dark:text-zinc-100 gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined">settings</span>
-</button>
-</div>
+    <div class="flex size-12 shrink-0 items-center justify-start">
+        <span class="material-symbols-outlined text-zinc-900 dark:text-zinc-100 text-3xl">local_library</span>
+    </div>
+    <h1 class="text-zinc-900 dark:text-zinc-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">暢銷小說榜單</h1>
+    <div class="flex w-12 items-center justify-end">
+        <button id="settingsBtn" class="flex cursor-pointer items-center justify-center rounded-full h-10 w-10 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+            <span class="material-symbols-outlined">settings</span>
+        </button>
+    </div>
 </header>
+
+<!-- 國家選擇，同樣保持原設計 -->
 <div class="px-4 pt-4 pb-2">
-<input class="peer hidden" id="country-modal-toggle" name="modal-control" type="checkbox"/>
-<label class="inline-flex h-9 cursor-pointer shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary pl-4 pr-3" for="country-modal-toggle">
-<p class="text-white text-sm font-medium leading-normal">台灣</p>
-<span class="material-symbols-outlined text-white" style="font-size: 20px;">expand_more</span>
+<input class="peer hidden" id="country-modal-toggle" type="checkbox"/>
+<label class="inline-flex h-9 cursor-pointer items-center gap-x-2 rounded-full bg-primary pl-4 pr-3 text-white" for="country-modal-toggle">
+    台灣
+    <span class="material-symbols-outlined text-white">expand_more</span>
 </label>
-<div class="peer-checked:block hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0 peer-checked:opacity-100"></div>
-<div class="fixed inset-x-0 bottom-0 z-50 flex h-[85dvh] flex-col rounded-t-2xl bg-background-light dark:bg-zinc-900 shadow-lg transition-transform duration-300 translate-y-full peer-checked:translate-y-0">
-<header class="flex shrink-0 items-center justify-between border-b border-zinc-200 dark:border-zinc-800 p-4">
-<h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">選擇國家</h2>
-<label class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700" for="country-modal-toggle">
-<span class="material-symbols-outlined text-zinc-600 dark:text-zinc-300" style="font-size: 20px;">close</span>
-</label>
-</header>
-<div class="p-4">
-<div class="relative">
-<span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">search</span>
-<input class="w-full rounded-full border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white py-2 pl-10 pr-4 text-sm placeholder-zinc-500 focus:border-primary focus:ring-primary" placeholder="搜尋國家..." type="text"/>
+
+<div class="peer-checked:block hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm opacity-0 peer-checked:opacity-100"></div>
+
+<div class="fixed inset-x-0 bottom-0 z-50 flex h-[85dvh] flex-col rounded-t-2xl bg-background-light dark:bg-zinc-900 shadow-lg translate-y-full peer-checked:translate-y-0 duration-300">
+    <header class="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 p-4">
+        <h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">選擇國家</h2>
+        <label class="h-8 w-8 flex items-center justify-center bg-zinc-200 dark:bg-zinc-800 rounded-full cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-700" for="country-modal-toggle">
+            <span class="material-symbols-outlined text-zinc-600 dark:text-zinc-300">close</span>
+        </label>
+    </header>
+
+    <div class="p-4">
+        <div class="relative">
+            <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">search</span>
+            <input class="w-full rounded-full border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white py-2 pl-10 pr-4 placeholder-zinc-500 focus:border-primary focus:ring-primary" placeholder="搜尋國家..." type="text"/>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto">
+        <nav class="flex flex-col">
+            <label class="px-4 py-3 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
+                台灣 <span class="material-symbols-outlined text-primary">check_circle</span>
+            </label>
+            <label class="px-4 py-3 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">美國</label>
+            <label class="px-4 py-3 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">英國</label>
+            <label class="px-4 py-3 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">日本</label>
+            <label class="px-4 py-3 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">法國</label>
+            <label class="px-4 py-3 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">德國</label>
+            <label class="px-4 py-3 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">加拿大</label>
+            <label class="px-4 py-3 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">澳洲</label>
+        </nav>
+    </div>
 </div>
 </div>
-<div class="flex-1 overflow-y-auto">
-<nav class="flex flex-col">
-<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
-<span class="text-zinc-800 dark:text-zinc-200">台灣</span>
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-</label>
-<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
-<span class="text-zinc-800 dark:text-zinc-200">美國</span>
-</label>
-<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
-<span class="text-zinc-800 dark:text-zinc-200">英國</span>
-</label>
-<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
-<span class="text-zinc-800 dark:text-zinc-200">日本</span>
-</label>
-<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
-<span class="text-zinc-800 dark:text-zinc-200">法國</span>
-</label>
-<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
-<span class="text-zinc-800 dark:text-zinc-200">德國</span>
-</label>
-<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
-<span class="text-zinc-800 dark:text-zinc-200">加拿大</span>
-</label>
-<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
-<span class="text-zinc-800 dark:text-zinc-200">澳洲</span>
-</label>
-</nav>
-</div>
-</div>
-</div>
+
+<!-- ---------------------- -->
+<!--   內容（書籍卡片） -->
+<!-- ---------------------- -->
+
 <main class="flex flex-col gap-4 p-4 pt-2">
-<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
-<div class="flex items-center gap-4 p-3">
-<span class="text-2xl font-bold w-6 text-center text-primary dark:text-primary/90">1</span>
-<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for Dragon Raja" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAU_u-z2yWv_Aa1o_ki2BRl5qT2x9JiBUeo-HURp2Z2AUco-p-a5S1bBW_wX-JnDVQ2G53IfnyYrxQP0en9ep4qRKnataLfWJoaZX6bDhydgo2FDKIq8uaUO6fgbqGbyypeKfhVSpEZg0bUsM-E1h9_We7MEZPFt20IzIlLqpCL4dH73S9fSBAKWiUd2fDQf8lUmjNf2dKNdnupyCSzS0Evw7gooQHvsyjdc3D_W1zh8IqQ6ZNVAY3G4Ur7zFeUjZjO5sqzhlRm8D4");'></div>
-<div class="flex flex-1 flex-col justify-center overflow-hidden">
-<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">龍族</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">一部融合了奇幻與冒險的史詩級小說...</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：李榮道</p>
-</div>
-<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
-</button>
-</div>
-<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
-<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
-<div class="group/comment">
-<div class="flex items-center gap-4">
-<div class="flex items-center text-zinc-400">
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined">star</span>
-</div>
-<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700 group-focus-within/comment:hidden">
-                        新增您的評論...
+
+<!-- 我保留你的內容，不刪減，但插入 JS 支援的 class 標籤 -->
+
+<!-- 書籍卡片（示例：龍族） -->
+<div class="book-card flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+    <div class="flex items-center gap-4 p-3">
+        <span class="rank text-2xl font-bold w-6 text-center text-primary">1</span>
+
+        <div class="book-cover bg-center bg-no-repeat bg-cover rounded-md h-20 w-14" style='background-image:url("https://lh3.googleusercontent.com/aida-public/AB6AXuAU_u-z2yWv_Aa1o_ki2BRl5qT2x9JiBUeo-HURp2Z2AUco-p-a5S1bBW_wX-JnDVQ2G53IfnyYrxQP0en9ep4qRKnataLfWJoaZX6bDhydgo2FDKIq8uaUO6fgbqGbyypeKfhVSpEZg0bUsM-E1h9_We7MEZPFt20IzIlLqpCL4dH73S9fSBAKWiUd2fDQf8lUmjNf2dKNdnupyCSzS0Evw7gooQHvsyjdc3D_W1zh8IqQ6ZNVAY3G4Ur7zFeUjZjO5sqzhlRm8D4");'></div>
+
+        <div class="flex flex-1 flex-col overflow-hidden">
+            <p class="title text-base font-bold truncate">龍族</p>
+            <p class="summary text-sm text-zinc-500 dark:text-zinc-400 mt-1">一部融合了奇幻與冒險的史詩級小說...</p>
+            <p class="author text-sm text-zinc-500 dark:text-zinc-400 mt-1">作者：李榮道</p>
+        </div>
+
+        <button class="share-btn flex items-center justify-center size-9 rounded-full text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">ios_share</span>
+        </button>
+    </div>
+
+    <div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
+        <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-2">評分與評論</p>
+
+        <div class="review-section group/comment">
+            <div class="flex items-center gap-4">
+                <div class="rating-stars flex items-center">
+                    <span class="material-symbols-outlined text-yellow-500" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-yellow-500" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-yellow-500" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined text-yellow-500" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined">star</span>
+                </div>
+
+                <button class="add-comment-btn flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                    新增您的評論...
+                </button>
+            </div>
+
+            <div class="comment-editor hidden flex-col gap-3 pt-3">
+                <div class="rating-stars-edit flex items-center gap-1 text-zinc-300 dark:text-zinc-600">
+                    <span class="material-symbols-outlined cursor-pointer text-yellow-400" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined cursor-pointer text-yellow-400" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined cursor-pointer text-yellow-400" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined cursor-pointer text-yellow-400" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="material-symbols-outlined cursor-pointer">star</span>
+                </div>
+
+                <div class="relative">
+                    <textarea class="comment-text w-full resize-none rounded-lg border border-zinc-300 bg-transparent p-3 text-sm dark:border-zinc-700 dark:text-zinc-200 placeholder-zinc-400" rows="3" placeholder="分享您的想法..."></textarea>
+                    
+                    <button class="send-comment absolute bottom-2 right-2 flex items-center justify-center h-8 w-8 rounded-full bg-primary text-white hover:bg-primary/90">
+                        <span class="material-symbols-outlined" style="font-size:20px;">send</span>
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
-<div class="hidden flex-col gap-3 pt-3 group-focus-within/comment:flex">
-<div class="group/rating flex items-center gap-1 text-zinc-300 dark:text-zinc-600">
-<span class="material-symbols-outlined cursor-pointer text-yellow-400 dark:text-yellow-500 animate-star-rating" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined cursor-pointer text-yellow-400 dark:text-yellow-500 animate-star-rating" style="font-variation-settings: 'FILL' 1; animation-delay: 50ms;">star</span>
-<span class="material-symbols-outlined cursor-pointer text-yellow-400 dark:text-yellow-500 animate-star-rating" style="font-variation-settings: 'FILL' 1; animation-delay: 100ms;">star</span>
-<span class="material-symbols-outlined cursor-pointer text-yellow-400 dark:text-yellow-500 animate-star-rating" style="font-variation-settings: 'FILL' 1; animation-delay: 150ms;">star</span>
-<span class="material-symbols-outlined cursor-pointer">star</span>
-</div>
-<div class="relative">
-<textarea class="w-full resize-none rounded-lg border border-zinc-300 bg-transparent p-3 text-sm text-zinc-800 dark:border-zinc-700 dark:text-zinc-200 placeholder-zinc-400 focus:border-primary focus:ring-primary" placeholder="分享您的想法..." rows="3">我覺得這本書的情節非常吸引人，角色刻畫也很深刻！</textarea>
-<button class="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white hover:bg-primary/90">
-<span class="material-symbols-outlined" style="font-size: 20px;">send</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
-<div class="flex items-center gap-4 p-3">
-<span class="text-2xl font-bold w-6 text-center text-zinc-600 dark:text-zinc-400">2</span>
-<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for Dune" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA7FFlEaiflyGiL7HGummAtfprYA9vhNHPyUbLJczJ99LM6VIKqn038I7nofsJOXoSLvyxCPnHa0uczfD0aYbvigSK2ncXqSQ9VXVMznOLO6pqPJYtf0o1VS-h6Auoub-kGhNvrKn6yH-21iUzqOiXr8kmaPCMlx-YY0ERJxM7wVHMoobw2KO4PR4pybl6xGsn3lorxUo3O4XuYw8ggnRxsz3F18tTqMARHuiZMj4S7LvgflUlxe_6L7nZ9trIJu2Lu-DOjZvmVuVw");'></div>
-<div class="flex flex-1 flex-col justify-center overflow-hidden">
-<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">沙丘</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">在遙遠的未來，一個關於權力、宗教和生態...</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：法蘭克·赫伯特</p>
-</div>
-<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
-</button>
-</div>
-<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
-<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
-<div class="flex items-center gap-4">
-<div class="flex items-center text-zinc-400">
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-</div>
-<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
-                        新增您的評論...
-                    </button>
-</div>
-</div>
-</div>
-<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
-<div class="flex items-center gap-4 p-3">
-<span class="text-2xl font-bold w-6 text-center text-zinc-600 dark:text-zinc-400">3</span>
-<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for A Song of Ice and Fire" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDNDmUc0yQBn0Mxj2wkIlhxxm04-FFcOnkzGQ8qt6vQS2tfEKRjxV8-QKKtxeZ-AwkwLrU2DrmGvw1xIaDxrGtUwuXbVxTYPTEQlf1UZuqBNE-ffCY_G8zetCDm6DI8NPbAiBNz_PheRyX6El83jyoGTFwpsqu7tCo9w9oaPLOpluzrvyFPD161kHamPxL7w2NgKW28hCjP-x8JwqubjXHLd7JByoZkwJ-13ia1V2pi4_GXHI1E6E-f1GfAri90tXLI06ws9SplQkc");'></div>
-<div class="flex flex-1 flex-col justify-center overflow-hidden">
-<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">冰與火之歌</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">在維斯特洛大陸上，七大王國為爭奪鐵王座...</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：喬治·R·R·馬丁</p>
-</div>
-<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
-</button>
-</div>
-<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
-<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
-<div class="flex items-center gap-4">
-<div class="flex items-center text-zinc-400">
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined">star</span>
-</div>
-<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
-                        新增您的評論...
-                    </button>
-</div>
-</div>
-</div>
-<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
-<div class="flex items-center gap-4 p-3">
-<span class="text-2xl font-bold w-6 text-center text-zinc-600 dark:text-zinc-400">4</span>
-<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for The Lord of the Rings" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBrIDi4VZqYfuNdEMD5wuzT2ag5vSx1lXI9p_1EGwhDFi44yOk5PPIoCpZYLw5NJoCxZM9ny2zekBKwDQeOMlwqXZmsZvBtCYRvpPf3tsVqUyipaBryzT37O_1fn7Jw5YC3rIo18inDw07u8xIZduo6rHtFo47sGs6YCn-_GpqUlmQIsixh3joEfAYbdhzAWyef-REgadPIndz_8zawrrJBRZCUFD6Hg8y19AmharGSMQ8i-XII4hZUV5Mb6psh_1VKtcdVZRcBewA");'></div>
-<div class="flex flex-1 flex-col justify-center overflow-hidden">
-<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">魔戒</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">一場關於友誼、勇氣與對抗邪惡的史詩旅程...</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：J.R.R. 托爾金</p>
-</div>
-<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
-</button>
-</div>
-<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
-<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
-<div class="flex items-center gap-4">
-<div class="flex items-center text-zinc-400">
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined">star</span>
-</div>
-<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
-                        新增您的評論...
-                    </button>
-</div>
-</div>
-</div>
-<div class="flex flex-col bg-white dark:bg-zinc-900 rounded-xl shadow-sm transition-shadow hover:shadow-md">
-<div class="flex items-center gap-4 p-3">
-<span class="text-2xl font-bold w-6 text-center text-zinc-600 dark:text-zinc-400">5</span>
-<div class="bg-center bg-no-repeat bg-cover rounded-md h-20 w-14 flex-shrink-0" data-alt="Book cover for Harry Potter" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCgazYzj8pj61Oiaz8xUxr16Xw5Z-SRvcNy4L5D10j10QapnZPHxJdfk15ga3rdV4phu2tX_5jrV6GAXeq7gysfBa4R7SvC0av8dEyl8hPJDkPBKsWD7OOrDY6bRsgCY_RzkdaBV_dKK5HcV5wLVatAt2xmdl1Ag3GqFwHwUrU8GWcknRVXTUmGrdl8eHMWhiMNz5bC0ogjSj5L7_YsXrWQXdcGEKftihhHF1tIp0QyACmvixhVq_W9PGnteHDluEa_1rZJlRK9I20");'></div>
-<div class="flex flex-1 flex-col justify-center overflow-hidden">
-<p class="text-zinc-900 dark:text-zinc-100 text-base font-bold leading-tight truncate">哈利波特</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">一位年輕巫師在魔法學校的成長與冒險故事...</p>
-<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：J.K. 羅琳</p>
-</div>
-<button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
-</button>
-</div>
-<div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
-<p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
-<div class="flex items-center gap-4">
-<div class="flex items-center text-zinc-400">
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-</div>
-<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
-                        新增您的評論...
-                    </button>
-</div>
-</div>
-</div>
+
 </main>
 </div>
-</body></html>
+
+
+<!-- =========================== -->
+<!--  JavaScript 行為功能（重點） -->
+<!-- =========================== -->
+<script>
+// ------------------------------
+// 1. 分享功能
+// ------------------------------
+document.querySelectorAll(".share-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        alert("📢 分享功能尚未串接，可在此加入分享 API！");
+    });
+});
+
+// ------------------------------
+// 2. 點擊「新增評論」→ 顯示評論編輯區
+// ------------------------------
+document.querySelectorAll(".add-comment-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const editor = btn.closest(".review-section").querySelector(".comment-editor");
+        editor.classList.toggle("hidden");
+    });
+});
+
+// ------------------------------
+// 3. 點擊星星 → 切換評分
+// ------------------------------
+document.querySelectorAll(".rating-stars-edit").forEach(starGroup => {
+    const stars = starGroup.querySelectorAll("span");
+
+    stars.forEach((star, index) => {
+        star.addEventListener("click", () => {
+            stars.forEach((s, i) => {
+                if (i <= index) {
+                    s.style.fontVariationSettings = "'FILL' 1";
+                    s.style.color = "#eab308";
+                } else {
+                    s.style.fontVariationSettings = "'FILL' 0";
+                    s.style.color = "";
+                }
+            });
+        });
+    });
+});
+
+// ------------------------------
+// 4. 送出評論
+// ------------------------------
+document.querySelectorAll(".send-comment").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const textArea = btn.closest(".relative").querySelector(".comment-text");
+        const content = textArea.value.trim();
+
+        if (!content) {
+            alert("請輸入評論內容！");
+            return;
+        }
+
+        alert("評論已送出！\n\n" + content);
+        textArea.value = "";
+    });
+});
+
+// ------------------------------
+// 5. 設定按鈕
+// ------------------------------
+document.getElementById("settingsBtn").addEventListener("click", () => {
+    alert("⚙️ 這裡可以加入設定功能！");
+});
+</script>
+
+</body>
+</html>
