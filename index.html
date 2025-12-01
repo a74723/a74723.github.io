@@ -17,6 +17,15 @@
         .peer:checked ~ .peer-checked\:block {
             display: block;
         }
+        .peer:checked ~ .peer-checked\:flex {
+            display: flex;
+        }
+        .peer:checked ~ .peer-checked\:translate-y-0 {
+            transform: translateY(0);
+        }
+        .peer:checked ~ .peer-checked\:opacity-100 {
+            opacity: 1;
+        }
     </style>
 <script id="tailwind-config">
         tailwind.config = {
@@ -50,6 +59,18 @@
     body {
       min-height: max(884px, 100dvh);
     }
+    @keyframes star-rating {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.3); }
+    }
+    .animate-star-rating {
+        animation: star-rating 0.3s ease-in-out;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
   </style>
   </head>
 <body class="bg-background-light dark:bg-background-dark font-display">
@@ -66,22 +87,53 @@
 </div>
 </header>
 <div class="px-4 pt-4 pb-2">
-<div class="relative inline-block text-left">
-<div>
-<input class="peer hidden" id="country-toggle" type="checkbox"/>
-<label class="flex h-9 cursor-pointer shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary pl-4 pr-3" for="country-toggle">
+<input class="peer hidden" id="country-modal-toggle" name="modal-control" type="checkbox"/>
+<label class="inline-flex h-9 cursor-pointer shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary pl-4 pr-3" for="country-modal-toggle">
 <p class="text-white text-sm font-medium leading-normal">台灣</p>
-<span class="material-symbols-outlined text-white transition-transform peer-checked:rotate-180" style="font-size: 20px;">expand_more</span>
+<span class="material-symbols-outlined text-white" style="font-size: 20px;">expand_more</span>
 </label>
-<div class="absolute left-0 mt-2 w-48 origin-top-left rounded-xl bg-white dark:bg-zinc-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden peer-checked:block z-20">
-<div aria-labelledby="country-toggle" aria-orientation="vertical" class="py-1" role="menu">
-<a class="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-700" href="#" role="menuitem">台灣</a>
-<a class="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-700" href="#" role="menuitem">美國</a>
-<a class="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-700" href="#" role="menuitem">英國</a>
-<a class="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-700" href="#" role="menuitem">日本</a>
-<a class="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-700" href="#" role="menuitem">法國</a>
+<div class="peer-checked:block hidden fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 opacity-0 peer-checked:opacity-100"></div>
+<div class="fixed inset-x-0 bottom-0 z-50 flex h-[85dvh] flex-col rounded-t-2xl bg-background-light dark:bg-zinc-900 shadow-lg transition-transform duration-300 translate-y-full peer-checked:translate-y-0">
+<header class="flex shrink-0 items-center justify-between border-b border-zinc-200 dark:border-zinc-800 p-4">
+<h2 class="text-lg font-bold text-zinc-900 dark:text-zinc-100">選擇國家</h2>
+<label class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700" for="country-modal-toggle">
+<span class="material-symbols-outlined text-zinc-600 dark:text-zinc-300" style="font-size: 20px;">close</span>
+</label>
+</header>
+<div class="p-4">
+<div class="relative">
+<span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">search</span>
+<input class="w-full rounded-full border-zinc-300 bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white py-2 pl-10 pr-4 text-sm placeholder-zinc-500 focus:border-primary focus:ring-primary" placeholder="搜尋國家..." type="text"/>
 </div>
 </div>
+<div class="flex-1 overflow-y-auto">
+<nav class="flex flex-col">
+<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
+<span class="text-zinc-800 dark:text-zinc-200">台灣</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</label>
+<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
+<span class="text-zinc-800 dark:text-zinc-200">美國</span>
+</label>
+<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
+<span class="text-zinc-800 dark:text-zinc-200">英國</span>
+</label>
+<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
+<span class="text-zinc-800 dark:text-zinc-200">日本</span>
+</label>
+<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
+<span class="text-zinc-800 dark:text-zinc-200">法國</span>
+</label>
+<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
+<span class="text-zinc-800 dark:text-zinc-200">德國</span>
+</label>
+<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
+<span class="text-zinc-800 dark:text-zinc-200">加拿大</span>
+</label>
+<label class="flex cursor-pointer items-center justify-between px-4 py-3 hover:bg-zinc-100 dark:hover:bg-zinc-800" for="country-modal-toggle">
+<span class="text-zinc-800 dark:text-zinc-200">澳洲</span>
+</label>
+</nav>
 </div>
 </div>
 </div>
@@ -96,11 +148,12 @@
 <p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：李榮道</p>
 </div>
 <button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined">share</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
 </button>
 </div>
 <div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
 <p class="text-zinc-600 dark:text-zinc-400 text-sm font-medium mb-2">評分與評論</p>
+<div class="group/comment">
 <div class="flex items-center gap-4">
 <div class="flex items-center text-zinc-400">
 <span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
@@ -109,9 +162,25 @@
 <span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
 <span class="material-symbols-outlined">star</span>
 </div>
-<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700">
+<button class="flex-1 text-left text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-4 py-2 hover:bg-zinc-200 dark:hover:bg-zinc-700 group-focus-within/comment:hidden">
                         新增您的評論...
                     </button>
+</div>
+<div class="hidden flex-col gap-3 pt-3 group-focus-within/comment:flex">
+<div class="group/rating flex items-center gap-1 text-zinc-300 dark:text-zinc-600">
+<span class="material-symbols-outlined cursor-pointer text-yellow-400 dark:text-yellow-500 animate-star-rating" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined cursor-pointer text-yellow-400 dark:text-yellow-500 animate-star-rating" style="font-variation-settings: 'FILL' 1; animation-delay: 50ms;">star</span>
+<span class="material-symbols-outlined cursor-pointer text-yellow-400 dark:text-yellow-500 animate-star-rating" style="font-variation-settings: 'FILL' 1; animation-delay: 100ms;">star</span>
+<span class="material-symbols-outlined cursor-pointer text-yellow-400 dark:text-yellow-500 animate-star-rating" style="font-variation-settings: 'FILL' 1; animation-delay: 150ms;">star</span>
+<span class="material-symbols-outlined cursor-pointer">star</span>
+</div>
+<div class="relative">
+<textarea class="w-full resize-none rounded-lg border border-zinc-300 bg-transparent p-3 text-sm text-zinc-800 dark:border-zinc-700 dark:text-zinc-200 placeholder-zinc-400 focus:border-primary focus:ring-primary" placeholder="分享您的想法..." rows="3">我覺得這本書的情節非常吸引人，角色刻畫也很深刻！</textarea>
+<button class="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white hover:bg-primary/90">
+<span class="material-symbols-outlined" style="font-size: 20px;">send</span>
+</button>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -125,7 +194,7 @@
 <p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：法蘭克·赫伯特</p>
 </div>
 <button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined">share</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
 </button>
 </div>
 <div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
@@ -154,7 +223,7 @@
 <p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：喬治·R·R·馬丁</p>
 </div>
 <button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined">share</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
 </button>
 </div>
 <div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
@@ -183,7 +252,7 @@
 <p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：J.R.R. 托爾金</p>
 </div>
 <button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined">share</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
 </button>
 </div>
 <div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
@@ -212,7 +281,7 @@
 <p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal mt-1">作者：J.K. 羅琳</p>
 </div>
 <button class="flex items-center justify-center shrink-0 size-9 rounded-full text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
-<span class="material-symbols-outlined">share</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ios_share</span>
 </button>
 </div>
 <div class="border-t border-zinc-200 dark:border-zinc-800 px-4 py-3">
